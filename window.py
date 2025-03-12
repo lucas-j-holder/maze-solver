@@ -1,4 +1,5 @@
 from tkinter import Tk, BOTH, Canvas
+from drawables import Line
 
 class Window():
   def __init__(self, width, height):
@@ -15,6 +16,9 @@ class Window():
   def redraw(self):
     self.__root.update_idletasks()
     self.__root.update()
+  
+  def draw_line(self, line:Line, fill_color):
+    line.draw(self.canvas, fill_color)
   
   def wait_for_close(self):
     self.running = True

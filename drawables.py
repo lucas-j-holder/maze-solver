@@ -13,7 +13,7 @@ class Line():
     canvas.create_line(self.point1.x, self.point1.y, self.point2.x, self.point2.y, fill=fill_color, width=2)
 
 class Cell():
-  def __init__(self, x1, x2, y1, y2, window):
+  def __init__(self, x1, x2, y1, y2, window=None):
     self.left_wall = True
     self.top_wall = True
     self.right_wall = True
@@ -31,15 +31,11 @@ class Cell():
     point_bottom_right = Point(self._x2, self._y2)
 
 
-
-    if self.top_wall:
-      self.win.draw_line(Line(point_top_left, point_top_right), draw_color)
-    if self.left_wall:
-      self.win.draw_line(Line(point_top_left, point_bottom_left),draw_color)
-    if self.right_wall:
-      self.win.draw_line(Line(point_top_right, point_bottom_right),draw_color)
-    if self.bottom_wall:
-      self.win.draw_line(Line(point_bottom_left, point_bottom_right), draw_color)
+    # For each wall, check if the wall should be present, if it is, then draw a wall of the draw_color, else white.
+    self.win.draw_line(Line(point_top_left, point_top_right), draw_color if self.top_wall else "white")
+    self.win.draw_line(Line(point_top_left, point_bottom_left),draw_color if self.left_wall else "white")
+    self.win.draw_line(Line(point_top_right, point_bottom_right),draw_color if self.right_wall else "white")
+    self.win.draw_line(Line(point_bottom_left, point_bottom_right), draw_color if self.bottom_wall else "white")
     return self
   
   def draw_move(self, to_cell, undo=False):

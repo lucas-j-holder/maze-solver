@@ -1,9 +1,10 @@
 from drawables import Cell
 from window import Window
 from time import sleep
+import random
 class Maze():
 
-  def __init__(self, x1, y1, num_rows, num_cols, cell_size_x, cell_size_y, window:Window=None):
+  def __init__(self, x1, y1, num_rows, num_cols, cell_size_x, cell_size_y, window:Window=None, seed=None):
     self.x1 = x1
     self.y1 = y1
     self.num_rows = num_rows
@@ -13,6 +14,7 @@ class Maze():
     self.window = window
     self._cells = []
     self._create_cells()
+    random.seed(seed)
   
   def _create_cells(self):
     
@@ -44,3 +46,43 @@ class Maze():
     self._draw_cell(0, 0)
     bottom_right_cell.bottom_wall = False
     self._draw_cell(-1, -1)
+  
+  def _break_walls_r(self, i, j):
+    cell = self._cells[i][j]
+    cell.visited = True
+    while True:
+      to_visit = []
+      if i > 0 and not self._cells[i-1][j].visited:
+          to_visit.append({"direction": "up", "position": [i-1, j]})
+      if j > 0 and not self._cells[i][j-1].visited:
+          to_visit.append({"direction": "left", "position": [i, j-1]})
+      if i < len(self._cells)-1 and not self._cells[i+1][j].visited:
+          to_visit.append({"direction": "down", "position": [i+1, j]})
+      if j < len(self._cells[0])-1 and not self._cells[i][j+1].visited:
+          to_visit.append({"direction": "right", "position": [i, j+1]})
+      if len(to_visit) == 0:
+         self._draw_cell(i,j)
+         return
+      
+      rand_num = random.randrange(0, len(to_visit))
+      random_direction, random_position  = to_visit[rand_num]["direction"], to_visit[rand_num]["position"]
+
+      to_cell = self._cells[random_position[0]][random_position[1]]
+
+      match random_direction:
+          case "up":
+            to_cell.bottom_wall = False
+            cell.top_wall = False
+          case "left":
+            to_cell.right_wall = False
+            cell.left_wall = False
+          case "down":
+            to_cell.top_wall = False
+            cell.bottom_wall = False
+          case "right":
+            to_cell.left_wall = False
+            cell.right_wall = False
+      
+      self._break_walls_r(random_position[0], random_position[1])
+
+

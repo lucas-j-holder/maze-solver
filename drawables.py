@@ -23,6 +23,7 @@ class Cell():
     self._y1 = y1
     self._y2 = y2
     self.win = window
+    self.visited = False
   
   def draw(self, draw_color="#000000"):
     point_top_left = Point(self._x1, self._y1)

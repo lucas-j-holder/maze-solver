@@ -7,6 +7,6 @@ point2 = Point(100,100)
 line = Line(point1, point2)
 
 maze = Maze(100, 100, 10, 10, 20, 20, win, 0)
-
+maze.solve()
 
 win.wait_for_close()

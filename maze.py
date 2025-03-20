@@ -93,4 +93,36 @@ class Maze():
       
       self._break_walls_r(random_position[0], random_position[1])
 
+  def solve(self):
+    return self._solve_r(0, 0)
 
+  def _solve_r(self, i, j):
+    cell = self._cells[i][j]
+    end_cell = self._cells[-1][-1]
+    self._animate()
+    cell.visited = True
+    if cell == end_cell:
+       return True
+    to_visit = []
+    if i > 0 and not self._cells[i-1][j].visited and not cell.top_wall:
+        to_visit.append({"direction": "up", "position": [i-1, j]})
+    if j > 0 and not self._cells[i][j-1].visited and not cell.left_wall:
+        to_visit.append({"direction": "left", "position": [i, j-1]})
+    if i < len(self._cells)-1 and not self._cells[i+1][j].visited and not cell.bottom_wall:
+        to_visit.append({"direction": "down", "position": [i+1, j]})
+    if j < len(self._cells[0])-1 and not self._cells[i][j+1].visited and not cell.right_wall:
+        to_visit.append({"direction": "right", "position": [i, j+1]})
+    
+    for direction in to_visit:
+      position = direction["position"]
+      cell.draw_move(self._cells[position[0]][position[1]])
+      result = self._solve_r(position[0], position[1])
+      if result:
+         return True
+      else:
+         cell.draw_move(self._cells[position[0]][position[1]], True)
+    return False
+       
+    
+
+    
